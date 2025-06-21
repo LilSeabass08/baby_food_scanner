@@ -4,10 +4,7 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 class BarcodeScannerWidget extends StatefulWidget {
   final Function(String) onBarcodeDetected;
 
-  const BarcodeScannerWidget({
-    super.key,
-    required this.onBarcodeDetected,
-  });
+  const BarcodeScannerWidget({super.key, required this.onBarcodeDetected});
 
   @override
   State<BarcodeScannerWidget> createState() => _BarcodeScannerWidgetState();
@@ -21,10 +18,6 @@ class _BarcodeScannerWidgetState extends State<BarcodeScannerWidget> {
   void dispose() {
     cameraController.dispose();
     super.dispose();
-  }
-
-  void _closeScreen() {
-    _isScanCompleted = false;
   }
 
   @override
@@ -49,10 +42,7 @@ class _BarcodeScannerWidgetState extends State<BarcodeScannerWidget> {
             const SizedBox(height: 20),
             const Text(
               'Place the barcode inside the frame to scan',
-              style: TextStyle(
-                color: Colors.white54,
-                fontSize: 16,
-              ),
+              style: TextStyle(color: Colors.white54, fontSize: 16),
             ),
             const SizedBox(height: 40),
             Expanded(
@@ -67,7 +57,8 @@ class _BarcodeScannerWidgetState extends State<BarcodeScannerWidget> {
                     controller: cameraController,
                     onDetect: (BarcodeCapture barcodeCapture) {
                       if (!_isScanCompleted) {
-                        final String barcode = barcodeCapture.barcodes.first.rawValue ?? '';
+                        final String barcode =
+                            barcodeCapture.barcodes.first.rawValue ?? '';
                         if (barcode.isNotEmpty) {
                           _isScanCompleted = true;
                           widget.onBarcodeDetected(barcode);
@@ -104,4 +95,4 @@ class _BarcodeScannerWidgetState extends State<BarcodeScannerWidget> {
       ),
     );
   }
-} 
+}
