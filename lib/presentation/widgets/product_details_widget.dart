@@ -43,7 +43,7 @@ class ProductDetailsWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             spreadRadius: 1,
             blurRadius: 6,
             offset: const Offset(0, 3),
@@ -64,20 +64,15 @@ class ProductDetailsWidget extends StatelessWidget {
                 ? CachedNetworkImage(
                     imageUrl: product.imageUrl!,
                     fit: BoxFit.cover,
-                    placeholder: (context, url) => const Center(
-                      child: CircularProgressIndicator(),
-                    ),
+                    placeholder: (context, url) =>
+                        const Center(child: CircularProgressIndicator()),
                     errorWidget: (context, url, error) => const Icon(
                       Icons.fastfood,
                       color: Colors.grey,
                       size: 40,
                     ),
                   )
-                : const Icon(
-                    Icons.fastfood,
-                    color: Colors.grey,
-                    size: 40,
-                  ),
+                : const Icon(Icons.fastfood, color: Colors.grey, size: 40),
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -95,24 +90,28 @@ class ProductDetailsWidget extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     product.brand!,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[600],
-                    ),
+                    style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                   ),
                 ],
                 const SizedBox(height: 8),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
-                    color: product.isBabyFood ? Colors.green[100] : Colors.orange[100],
+                    color: product.isBabyFood
+                        ? Colors.green[100]
+                        : Colors.orange[100],
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
                     product.isBabyFood ? 'Baby Food' : 'General Food',
                     style: TextStyle(
                       fontSize: 12,
-                      color: product.isBabyFood ? Colors.green[800] : Colors.orange[800],
+                      color: product.isBabyFood
+                          ? Colors.green[800]
+                          : Colors.orange[800],
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -127,24 +126,25 @@ class ProductDetailsWidget extends StatelessWidget {
 
   Widget _buildRecommendationCard() {
     final bool isRecommended = recommendation.isRecommended;
-    final bool hasAddedSugarWarning = recommendation.concerns.any((concern) => 
-        concern.contains('ADDED SUGARS') || concern.contains('🚨'));
-    
-    final Color cardColor = hasAddedSugarWarning 
-        ? Colors.red[700]! 
+    final bool hasAddedSugarWarning = recommendation.concerns.any(
+      (concern) => concern.contains('ADDED SUGARS') || concern.contains('🚨'),
+    );
+
+    final Color cardColor = hasAddedSugarWarning
+        ? Colors.red[700]!
         : (isRecommended ? Colors.green : Colors.red);
-    final IconData icon = hasAddedSugarWarning 
-        ? Icons.dangerous 
+    final IconData icon = hasAddedSugarWarning
+        ? Icons.dangerous
         : (isRecommended ? Icons.check_circle : Icons.warning);
 
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: cardColor.withOpacity(0.1),
+        color: cardColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: cardColor.withOpacity(0.3),
+          color: cardColor.withValues(alpha: 0.3),
           width: hasAddedSugarWarning ? 2 : 1,
         ),
       ),
@@ -195,14 +195,18 @@ class ProductDetailsWidget extends StatelessWidget {
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
-            ...recommendation.benefits.map((benefit) => Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Icon(Icons.check, color: Colors.green, size: 16),
-                    const SizedBox(width: 8),
-                    Expanded(child: Text(benefit, style: const TextStyle(fontSize: 13))),
-                  ],
-                )),
+            ...recommendation.benefits.map(
+              (benefit) => Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Icon(Icons.check, color: Colors.green, size: 16),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(benefit, style: const TextStyle(fontSize: 13)),
+                  ),
+                ],
+              ),
+            ),
           ],
           if (recommendation.concerns.isNotEmpty) ...[
             const SizedBox(height: 16),
@@ -211,38 +215,46 @@ class ProductDetailsWidget extends StatelessWidget {
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
-            ...recommendation.concerns.map((concern) => Padding(
-                  padding: const EdgeInsets.only(bottom: 4),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Icon(
-                        concern.contains('ADDED SUGARS') || concern.contains('🚨')
-                            ? Icons.dangerous
-                            : Icons.warning,
-                        color: concern.contains('ADDED SUGARS') || concern.contains('🚨')
-                            ? Colors.red[700]
-                            : Colors.orange,
-                        size: 16,
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          concern,
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: concern.contains('ADDED SUGARS') || concern.contains('🚨')
-                                ? FontWeight.bold
-                                : FontWeight.normal,
-                            color: concern.contains('ADDED SUGARS') || concern.contains('🚨')
-                                ? Colors.red[700]
-                                : Colors.black87,
-                          ),
+            ...recommendation.concerns.map(
+              (concern) => Padding(
+                padding: const EdgeInsets.only(bottom: 4),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(
+                      concern.contains('ADDED SUGARS') || concern.contains('🚨')
+                          ? Icons.dangerous
+                          : Icons.warning,
+                      color:
+                          concern.contains('ADDED SUGARS') ||
+                              concern.contains('🚨')
+                          ? Colors.red[700]
+                          : Colors.orange,
+                      size: 16,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        concern,
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight:
+                              concern.contains('ADDED SUGARS') ||
+                                  concern.contains('🚨')
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                          color:
+                              concern.contains('ADDED SUGARS') ||
+                                  concern.contains('🚨')
+                              ? Colors.red[700]
+                              : Colors.black87,
                         ),
                       ),
-                    ],
-                  ),
-                )),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ],
       ),
@@ -258,7 +270,7 @@ class ProductDetailsWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.1),
+              color: Colors.grey.withValues(alpha: 0.1),
               spreadRadius: 1,
               blurRadius: 6,
               offset: const Offset(0, 3),
@@ -270,7 +282,7 @@ class ProductDetailsWidget extends StatelessWidget {
     }
 
     final nutrition = product.nutrition!;
-    
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -278,7 +290,7 @@ class ProductDetailsWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             spreadRadius: 1,
             blurRadius: 6,
             offset: const Offset(0, 3),
@@ -293,28 +305,62 @@ class ProductDetailsWidget extends StatelessWidget {
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
-          _buildNutritionRow('Energy', '${nutrition.energyKcal?.toStringAsFixed(0) ?? 'N/A'} kcal'),
-          _buildNutritionRow('Fat', '${nutrition.fat?.toStringAsFixed(1) ?? 'N/A'} g'),
-          _buildNutritionRow('Saturated Fat', '${nutrition.saturatedFat?.toStringAsFixed(1) ?? 'N/A'} g'),
-          _buildNutritionRow('Carbohydrates', '${nutrition.carbohydrates?.toStringAsFixed(1) ?? 'N/A'} g'),
-          _buildNutritionRow('Sugars', '${nutrition.sugars?.toStringAsFixed(1) ?? 'N/A'} g'),
-          _buildNutritionRow('Fiber', '${nutrition.fiber?.toStringAsFixed(1) ?? 'N/A'} g'),
-          _buildNutritionRow('Protein', '${nutrition.proteins?.toStringAsFixed(1) ?? 'N/A'} g'),
-          _buildNutritionRow('Salt', '${nutrition.salt?.toStringAsFixed(2) ?? 'N/A'} g'),
-          if (nutrition.nutritionGrade.isNotEmpty && nutrition.nutritionGrade != 'UNKNOWN') ...[
+          _buildNutritionRow(
+            'Energy',
+            '${nutrition.energyKcal?.toStringAsFixed(0) ?? 'N/A'} kcal',
+          ),
+          _buildNutritionRow(
+            'Fat',
+            '${nutrition.fat?.toStringAsFixed(1) ?? 'N/A'} g',
+          ),
+          _buildNutritionRow(
+            'Saturated Fat',
+            '${nutrition.saturatedFat?.toStringAsFixed(1) ?? 'N/A'} g',
+          ),
+          _buildNutritionRow(
+            'Carbohydrates',
+            '${nutrition.carbohydrates?.toStringAsFixed(1) ?? 'N/A'} g',
+          ),
+          _buildNutritionRow(
+            'Sugars',
+            '${nutrition.sugars?.toStringAsFixed(1) ?? 'N/A'} g',
+          ),
+          _buildNutritionRow(
+            'Fiber',
+            '${nutrition.fiber?.toStringAsFixed(1) ?? 'N/A'} g',
+          ),
+          _buildNutritionRow(
+            'Protein',
+            '${nutrition.proteins?.toStringAsFixed(1) ?? 'N/A'} g',
+          ),
+          _buildNutritionRow(
+            'Salt',
+            '${nutrition.salt?.toStringAsFixed(2) ?? 'N/A'} g',
+          ),
+          if (nutrition.nutritionGrade.isNotEmpty &&
+              nutrition.nutritionGrade != 'UNKNOWN') ...[
             const SizedBox(height: 12),
             Row(
               children: [
-                const Text('Nutri-Score: ', style: TextStyle(fontWeight: FontWeight.w500)),
+                const Text(
+                  'Nutri-Score: ',
+                  style: TextStyle(fontWeight: FontWeight.w500),
+                ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: _getNutriScoreColor(nutrition.nutritionGrade),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
                     nutrition.nutritionGrade,
-                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ],
@@ -346,7 +392,7 @@ class ProductDetailsWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             spreadRadius: 1,
             blurRadius: 6,
             offset: const Offset(0, 3),
@@ -426,4 +472,4 @@ class ProductDetailsWidget extends StatelessWidget {
         return Colors.grey;
     }
   }
-} 
+}

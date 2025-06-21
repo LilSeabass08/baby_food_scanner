@@ -66,7 +66,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
           ],
         ),
-        error: (message) => _buildErrorView(context, message, scannerController),
+        error: (message) =>
+            _buildErrorView(context, message, scannerController),
       ),
     );
   }
@@ -104,11 +105,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             const Text(
               'Scan baby food products to get nutritional analysis and safety recommendations for your little one.',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey,
-                height: 1.5,
-              ),
+              style: TextStyle(fontSize: 16, color: Colors.grey, height: 1.5),
             ),
             const SizedBox(height: 48),
             Container(
@@ -183,10 +180,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   Widget _buildScanningView() {
     return const Center(
-      child: Text(
-        'Camera view should be here',
-        style: TextStyle(fontSize: 18),
-      ),
+      child: Text('Camera view should be here', style: TextStyle(fontSize: 18)),
     );
   }
 
@@ -197,43 +191,34 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         children: [
           CircularProgressIndicator(),
           SizedBox(height: 16),
-          Text(
-            'Analyzing product...',
-            style: TextStyle(fontSize: 16),
-          ),
+          Text('Analyzing product...', style: TextStyle(fontSize: 16)),
         ],
       ),
     );
   }
 
-  Widget _buildErrorView(BuildContext context, String message, ScannerController controller) {
+  Widget _buildErrorView(
+    BuildContext context,
+    String message,
+    ScannerController controller,
+  ) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.error_outline,
-              size: 64,
-              color: Colors.red[400],
-            ),
+            Icon(Icons.error_outline, size: 64, color: Colors.red[400]),
             const SizedBox(height: 16),
             const Text(
               'Oops! Something went wrong',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Text(
               message,
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 14,
-                color: Colors.grey,
-              ),
+              style: const TextStyle(fontSize: 14, color: Colors.grey),
             ),
             const SizedBox(height: 32),
             Row(
@@ -257,32 +242,32 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   Future<void> _startScanning(BuildContext context) async {
     final PermissionStatus cameraPermission = await Permission.camera.request();
-    
+
+    if (!context.mounted) return;
+
     if (cameraPermission == PermissionStatus.granted) {
-      if (mounted) {
-        final scannerController = ref.read(scannerControllerProvider.notifier);
-        scannerController.resetToScanning();
-        
-        await Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => BarcodeScannerWidget(
-              onBarcodeDetected: (String barcode) {
+      final scannerController = ref.read(scannerControllerProvider.notifier);
+      scannerController.resetToScanning();
+
+      await Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => BarcodeScannerWidget(
+            onBarcodeDetected: (String barcode) {
+              if (context.mounted) {
                 Navigator.of(context).pop();
                 scannerController.scanBarcode(barcode);
-              },
-            ),
+              }
+            },
           ),
-        );
-      }
+        ),
+      );
     } else {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Camera permission is required to scan barcodes'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Camera permission is required to scan barcodes'),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
-} 
+}
