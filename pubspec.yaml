@@ -14,7 +14,7 @@ dependencies:
   openfoodfacts: ^3.23.0
   
   # Barcode scanning
-  mobile_scanner: ^5.0.0
+  mobile_scanner: ^5.2.3
   
   # State management
   riverpod: ^2.5.1
