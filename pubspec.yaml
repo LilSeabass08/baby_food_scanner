@@ -32,6 +32,7 @@ dependencies:
   
   # Permission handling
   permission_handler: ^11.3.1
+  app_settings: ^5.1.1
 
 dev_dependencies:
   flutter_test:

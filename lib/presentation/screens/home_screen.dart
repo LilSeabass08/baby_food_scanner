@@ -241,6 +241,38 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Future<void> _startScanning(BuildContext context) async {
+    // First check the current permission status
+    PermissionStatus currentStatus = await Permission.camera.status;
+    
+    if (currentStatus == PermissionStatus.denied) {
+      // Show a dialog explaining why we need camera access
+      if (!context.mounted) return;
+      
+      final bool shouldRequest = await showDialog<bool>(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: const Text('Camera Permission Required'),
+          content: const Text(
+            'This app needs camera access to scan baby food barcodes and provide nutritional information. '
+            'Please allow camera access to continue.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text('Allow Camera'),
+            ),
+          ],
+        ),
+      ) ?? false;
+      
+      if (!shouldRequest) return;
+    }
+    
+    // Request permission
     final PermissionStatus cameraPermission = await Permission.camera.request();
 
     if (!context.mounted) return;
@@ -261,7 +293,36 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
         ),
       );
+    } else if (cameraPermission == PermissionStatus.permanentlyDenied) {
+      // Show dialog to open app settings
+      if (!context.mounted) return;
+      
+      final bool openSettings = await showDialog<bool>(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: const Text('Camera Permission Required'),
+          content: const Text(
+            'Camera access has been permanently denied. Please enable camera access in your device settings to use the barcode scanner.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text('Open Settings'),
+            ),
+          ],
+        ),
+      ) ?? false;
+      
+      if (openSettings) {
+        await openAppSettings();
+      }
     } else {
+      if (!context.mounted) return;
+      
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Camera permission is required to scan barcodes'),
